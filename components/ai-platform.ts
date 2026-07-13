@@ -49,7 +49,7 @@ export class AiPlatform extends pulumi.ComponentResource {
     args: AiPlatformArgs,
     opts?: pulumi.ComponentResourceOptions,
   ) {
-    super("stratiflux:ai:AiPlatform", name, {}, opts);
+    super("ai-platform:control:AiPlatform", name, {}, opts);
 
     const ns = new k8s.core.v1.Namespace(
       `${name}-ai-platform`,
@@ -58,8 +58,8 @@ export class AiPlatform extends pulumi.ComponentResource {
           name: "ai-platform",
           labels: {
             "app.kubernetes.io/part-of": "ai-control-plane",
-            "stratiflux.io/data-residency": args.dataResidency,
-            "stratiflux.io/provider": args.provider,
+            "ai-platform.io/data-residency": args.dataResidency,
+            "ai-platform.io/provider": args.provider,
           },
         },
       },
@@ -144,7 +144,7 @@ export class AiPlatform extends pulumi.ComponentResource {
           apiVersion: "serving.kserve.io/v1beta1",
           kind: "InferenceService",
           metadata: {
-            name: "stratisell-extractor",
+            name: "platform-extractor",
             namespace: ns.metadata.name,
             annotations: {
               "serving.kserve.io/deploymentMode": "Standard",
@@ -224,8 +224,8 @@ function buildLiteLLMConfig(args: AiPlatformArgs): string {
     models.push(`
       - model_name: small-extractor
         litellm_params:
-          model: openai/stratisell-extractor
-          api_base: http://stratisell-extractor-predictor.ai-platform.svc.cluster.local/v1
+          model: openai/platform-extractor
+          api_base: http://platform-extractor-predictor.ai-platform.svc.cluster.local/v1
           api_key: os.environ/VLLM_API_KEY
         model_info:
           mode: chat
@@ -247,8 +247,8 @@ function buildLiteLLMConfig(args: AiPlatformArgs): string {
     models.push(`
       - model_name: local-qwen-eu
         litellm_params:
-          model: openai/stratisell-extractor
-          api_base: http://stratisell-extractor-predictor.ai-platform.svc.cluster.local/v1
+          model: openai/platform-extractor
+          api_base: http://platform-extractor-predictor.ai-platform.svc.cluster.local/v1
           api_key: os.environ/VLLM_API_KEY
         model_info:
           mode: chat

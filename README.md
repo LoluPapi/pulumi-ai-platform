@@ -1,26 +1,20 @@
 # Pulumi AI Platform
 
-Reusable **Pulumi components** for deploying multi-tenant AI control planes across SaaS and customer-owned environments.
+Reusable **Pulumi components** and a **Kubernetes deploy bundle** for multi-tenant AI control planes across SaaS and customer-owned environments.
 
-Companion to [stratisell-ai-control-plane](https://github.com/LoluPapi/stratisell-ai-control-plane) (application logic) and [stratiflux-gitops/platform/enterprise-ai](https://github.com/stratiflux/stratiflux-gitops/tree/main/platform/enterprise-ai) (GitOps runtime bundle).
+Companion to [ai-control-plane](https://github.com/LoluPapi/ai-control-plane) (application logic + live demo).
+
+> All repos are personal open-source demos under [LoluPapi](https://github.com/LoluPapi). Safe to share in interviews — no proprietary company code.
 
 ## Design principle
 
 > I would not create four unrelated platforms. I would create reusable Pulumi components with environment-specific stacks and capability flags.
 
 ```
-shared-platform/
-  components/
-    kubernetes/      ← cluster bootstrap (provider-specific, out of scope here)
-    litellm/           ← OpenAI-compatible gateway
-    kserve/            ← vLLM InferenceService
-    observability/     ← Prometheus scrape + rules
-    vector-store/      ← Qdrant for tenant-scoped RAG
-  stacks/
-    saas-gcp/
-    customer-aws/
-    customer-azure/
-    customer-onprem/
+pulumi-ai-platform/
+  components/          ← AiPlatform Pulumi component (LiteLLM, KServe, vector store)
+  stacks/              ← saas-gcp, customer-aws, customer-azure, customer-onprem
+  deploy/kubernetes/   ← kubectl apply -k deploy/kubernetes
 ```
 
 ## Quick example
@@ -42,12 +36,12 @@ const platform = new AiPlatform("customer-a", {
 
 | Stack | Provider | Self-hosted | External APIs | Typical use |
 |-------|----------|-------------|---------------|-------------|
-| `saas-gcp` | GCP | ✅ | ✅ | StratiSell SaaS — cost-optimised routing |
+| `saas-gcp` | GCP | ✅ | ✅ | Shared SaaS — cost-optimised routing |
 | `customer-aws` | AWS | ✅ | ❌ (default) | Enterprise buyer, EU residency |
-| `customer-azure` | Azure | ✅ | ❌ | Mirrors `stratiflux-infra/azure/enterprise-ai-platform` |
+| `customer-azure` | Azure | ✅ | ❌ | Customer-owned Azure AKS |
 | `customer-onprem` | On-prem | ✅ | ❌ | Air-gapped, GPU on-prem |
 
-## Deploy
+## Deploy with Pulumi
 
 ```bash
 npm install
@@ -59,6 +53,15 @@ pulumi up
 
 Stack config templates live in `stacks/<name>/Pulumi.<name>.yaml`.
 
+## Deploy with kubectl (no Pulumi needed)
+
+For a quick cluster demo:
+
+```bash
+# Create secrets first (see deploy/kubernetes/README.md)
+kubectl apply -k deploy/kubernetes
+```
+
 ## Outputs
 
 | Output | Description |
@@ -68,24 +71,22 @@ Stack config templates live in `stacks/<name>/Pulumi.<name>.yaml`.
 | `kserveEnabled` | Whether InferenceService was provisioned |
 | `capabilityFlags` | Feature flags for compliance review |
 
-## Wire StratiSell / control plane
+## Wire the control plane
 
 ```text
 LITELLM_BASE_URL=http://litellm.ai-platform.svc.cluster.local:4000/v1
 LITELLM_API_KEY=<virtual key>
 ```
 
-Point [stratisell-ai-control-plane](https://github.com/LoluPapi/stratisell-ai-control-plane) at this endpoint with `--mode llm`.
+Point [ai-control-plane](https://github.com/LoluPapi/ai-control-plane) at this endpoint with `--mode llm`.
 
-## What this does NOT provision
+## Portfolio (LoluPapi — safe to share)
 
-Cloud-specific cluster creation (AKS/EKS/GKE) is handled by:
-
-- **Azure:** `stratiflux-infra/azure/enterprise-ai-platform` (Terraform)
-- **OCI SaaS:** `stratiflux-infra` k3s templates
-- **GitOps runtime:** `stratiflux-gitops/platform/enterprise-ai`
-
-This repo owns the **AI platform component** that sits on top of an existing cluster — the same boundary you'd use at Vanilla Steel.
+| Repo | Role |
+|------|------|
+| [ai-control-plane](https://github.com/LoluPapi/ai-control-plane) | Application control plane + live CLI demo |
+| [pulumi-ai-platform](https://github.com/LoluPapi/pulumi-ai-platform) | This repo — IaC + Kubernetes bundle |
+| [foundry-agent-evals](https://github.com/LoluPapi/foundry-agent-evals) | Evaluations as a blocking CI gate |
 
 ## Interview talking points
 

@@ -2,9 +2,9 @@
  * Stack entrypoint — select stack with: pulumi stack select <name>
  *
  * Stacks:
- *   saas-gcp          — StratiSell SaaS, external + self-hosted
+ *   saas-gcp          — Shared SaaS, external + self-hosted
  *   customer-aws      — Customer-owned AWS, GPU optional
- *   customer-azure    — Customer-owned Azure (mirrors stratiflux-infra)
+ *   customer-azure    — Customer-owned Azure
  *   customer-onprem   — Air-gapped, self-hosted only
  */
 import * as pulumi from "@pulumi/pulumi";

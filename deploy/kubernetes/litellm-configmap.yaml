@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litellm-config
+  namespace: ai-platform
+  labels:
+    app.kubernetes.io/name: litellm
+data:
+  config.yaml: |
+    general_settings:
+      master_key: os.environ/LITELLM_MASTER_KEY
+      store_model_in_db: false
+
+    router_settings:
+      routing_strategy: usage-based-routing-v2
+      enable_pre_call_checks: true
+      timeout: 45
+
+    litellm_settings:
+      success_callback: ["prometheus"]
+      failure_callback: ["prometheus"]
+      drop_params: true
+      request_timeout: 45
+
+    model_list:
+      - model_name: small-extractor
+        litellm_params:
+          model: openai/platform-vllm-sim
+          api_base: http://platform-vllm-sim-predictor.ai-platform.svc.cluster.local/v1
+          api_key: os.environ/VLLM_API_KEY
+        model_info:
+          mode: chat
+          owned_by: platform
+          description: Lightweight extractor for simple requests
+
+      - model_name: premium-extractor
+        litellm_params:
+          model: openai/platform-vllm-sim
+          api_base: http://platform-vllm-sim-predictor.ai-platform.svc.cluster.local/v1
+          api_key: os.environ/VLLM_API_KEY
+        model_info:
+          mode: chat
+          owned_by: platform
+          description: Higher-capability extractor for complex requests
+
+      - model_name: local-qwen-eu
+        litellm_params:
+          model: openai/platform-vllm-sim
+          api_base: http://platform-vllm-sim-predictor.ai-platform.svc.cluster.local/v1
+          api_key: os.environ/VLLM_API_KEY
+        model_info:
+          mode: chat
+          owned_by: customer
+          description: EU-resident self-hosted route — no external providers

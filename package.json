@@ -1,0 +1,21 @@
+{
+  "name": "pulumi-ai-platform",
+  "version": "0.1.0",
+  "description": "Reusable Pulumi components for multi-tenant AI platforms",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "@pulumi/pulumi": "^3.120.0",
+    "@pulumi/kubernetes": "^4.0.0",
+    "@pulumi/gcp": "^7.0.0",
+    "@pulumi/aws": "^6.0.0",
+    "@pulumi/azure-native": "^2.0.0"
+  }
+}

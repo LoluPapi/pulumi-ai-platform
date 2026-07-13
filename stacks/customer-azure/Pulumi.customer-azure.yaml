@@ -1,0 +1,4 @@
+config:
+  azure-native:location: westeurope
+  region: westeurope
+  gpuType: null

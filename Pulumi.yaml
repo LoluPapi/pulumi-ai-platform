@@ -1,0 +1,3 @@
+name: pulumi-ai-platform
+runtime: nodejs
+description: Reusable Pulumi components for StratiSell / Vanilla Steel AI control planes

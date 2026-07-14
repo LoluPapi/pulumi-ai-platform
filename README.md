@@ -14,7 +14,8 @@ Companion to [ai-control-plane](https://github.com/LoluPapi/ai-control-plane) (a
 pulumi-ai-platform/
   components/          ← AiPlatform Pulumi component (LiteLLM, KServe, vector store)
   stacks/              ← saas-gcp, customer-aws, customer-azure, customer-onprem
-  deploy/kubernetes/   ← kubectl apply -k deploy/kubernetes
+  deploy/kubernetes/   ← LiteLLM + KServe + control-plane API, kubectl apply -k
+  esc/                 ← Pulumi ESC environment (secrets over GCP Secret Manager)
 ```
 
 ## Quick example
@@ -60,6 +61,21 @@ For a quick cluster demo:
 ```bash
 # Create secrets first (see deploy/kubernetes/README.md)
 kubectl apply -k deploy/kubernetes
+```
+
+This deploys LiteLLM, a KServe vLLM simulator, **and** the
+[ai-control-plane](https://github.com/LoluPapi/ai-control-plane) API
+(`ghcr.io/lolupapi/ai-control-plane`) wired to the gateway — a complete
+request path in one apply.
+
+## Secrets with Pulumi ESC
+
+`esc/ai-platform-dev.yaml` shows the pattern: ESC environments composing over
+GCP Secret Manager with OIDC (no long-lived keys), consumed identically by
+stacks, CI, and developers:
+
+```bash
+pulumi env run ai-platform/dev -- uvicorn control_plane.api:app
 ```
 
 ## Outputs

@@ -1,0 +1,36 @@
+# Pulumi ESC environment — secrets and config as a managed, versioned unit.
+#
+# ESC sits over the cloud secret manager (here GCP Secret Manager) so that
+# stacks, CI, and developers all resolve the same environment without
+# copying .env files around:
+#
+#   pulumi env open ai-platform/dev
+#   pulumi env run ai-platform/dev -- uvicorn control_plane.api:app
+#
+# Stacks import it with:
+#   environment:
+#     - ai-platform/dev
+values:
+  gcp:
+    secrets:
+      fn::open::gcp-secrets:
+        login:
+          project: ai-platform-saas-demo
+          oidc:
+            workloadPoolId: pulumi-esc-pool
+            providerId: pulumi-esc-provider
+            serviceAccount: esc-reader@ai-platform-saas-demo.iam.gserviceaccount.com
+        get:
+          litellm-master-key:
+            name: litellm-master-key
+          vllm-api-key:
+            name: vllm-api-key
+
+  environmentVariables:
+    LITELLM_MASTER_KEY: ${gcp.secrets.litellm-master-key}
+    VLLM_API_KEY: ${gcp.secrets.vllm-api-key}
+    LITELLM_BASE_URL: http://litellm.ai-platform.svc.cluster.local:4000/v1
+
+  pulumiConfig:
+    region: europe-west4
+    dataResidency: eu

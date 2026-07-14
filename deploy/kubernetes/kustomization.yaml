@@ -7,3 +7,4 @@ resources:
   - litellm-deployment.yaml
   - litellm-service.yaml
   - inferenceservice-vllm-sim.yaml
+  - control-plane-api.yaml

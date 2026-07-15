@@ -1,6 +1,6 @@
 # Kubernetes deploy bundle
 
-Minimal LiteLLM + KServe simulator for demo clusters. No proprietary code — safe to share.
+Minimal LiteLLM + KServe simulator for demo clusters.
 
 ## Prerequisites
 

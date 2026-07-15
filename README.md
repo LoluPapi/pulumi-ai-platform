@@ -4,7 +4,7 @@ Reusable **Pulumi components** and a **Kubernetes deploy bundle** for multi-tena
 
 Companion to [ai-control-plane](https://github.com/LoluPapi/ai-control-plane) (application logic + live demo).
 
-> All repos are personal open-source demos under [LoluPapi](https://github.com/LoluPapi). Safe to share in interviews — no proprietary company code.
+> Personal open-source demo under [LoluPapi](https://github.com/LoluPapi).
 
 ## Design principle
 
@@ -96,7 +96,7 @@ LITELLM_API_KEY=<virtual key>
 
 Point [ai-control-plane](https://github.com/LoluPapi/ai-control-plane) at this endpoint with `--mode llm`.
 
-## Portfolio (LoluPapi — safe to share)
+## Related repos
 
 | Repo | Role |
 |------|------|
@@ -104,7 +104,7 @@ Point [ai-control-plane](https://github.com/LoluPapi/ai-control-plane) at this e
 | [pulumi-ai-platform](https://github.com/LoluPapi/pulumi-ai-platform) | This repo — IaC + Kubernetes bundle |
 | [foundry-agent-evals](https://github.com/LoluPapi/foundry-agent-evals) | Evaluations as a blocking CI gate |
 
-## Interview talking points
+## Key design points
 
 1. **Capability flags** — `externalProvidersAllowed: false` locks sensitive tenants to self-hosted vLLM
 2. **LiteLLM profiles** — `saas` vs `enterprise-locked` vs `onprem` routing strategies
